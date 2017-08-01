@@ -1,37 +1,68 @@
 ﻿using System;
 using PostSharp.Aspects;
-using System.Diagnostics;
+using AOPVSMSample.DataLayer;
+using AOPVSMSample.Dto;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AOPVSMSample.Aspects
 {
     [Serializable]
     public class LogAttribute : OnMethodBoundaryAspect
     {
+        //((System.RuntimeType)((System.Reflection.RuntimeMethodInfo) args.Method).ReturnType).FullName
         public override void OnEntry(MethodExecutionArgs args)
         {
-            Trace.Write(string.Format("Method başladı... {0}", args.Method));
-            Trace.Write(" Parametreler:");
+            ElasticSearchProvider provider = ElasticSearchProvider.GetInstance();
 
+            string[] parameterNames = args.Method.GetParameters().Select(p => p.Name).ToArray();
+
+            var parameters = new List<KeyValueModel>();
             for (int i = 0; i < args.Arguments.Count; i++)
             {
-                Trace.Write(" " + args.Arguments[i]);
-                Trace.WriteIf(i != args.Arguments.Count - 1, ",");
+                parameters.Add(new KeyValueModel
+                {
+                    Key = parameterNames[i].ToString(),
+                    Value = args.Arguments[i].ToString()
+                });
             }
-
-            Trace.Write(Environment.NewLine);
+            provider.AddLog(new CustomTraceLogModel
+            {
+                ClassName = args.Method.DeclaringType.FullName,
+                MethodName = args.Method.Name,
+                Parameters = parameters,
+                TraceStatus = TraceStatus.OnEntry
+            });
         }
 
 
         public override void OnExit(MethodExecutionArgs args)
         {
-            Trace.WriteLine(string.Format("method bitti, {0}. cevap: {1}", args.Method, args.ReturnValue));
+            ElasticSearchProvider provider = ElasticSearchProvider.GetInstance();
+
+            provider.AddLog(new CustomTraceLogModel
+            {
+                ClassName = args.Method.DeclaringType.FullName,
+                MethodName = args.Method.Name,
+                ReturnValue = args.ReturnValue,
+                TraceStatus = TraceStatus.OnExit
+            });
         }
 
 
         public override void OnException(MethodExecutionArgs args)
         {
-            Trace.WriteLine(String.Format("Metod hata oluştu. {0}: {1}", args.Method.Name,
-                args.Exception.StackTrace));
+            ElasticSearchProvider provider = ElasticSearchProvider.GetInstance();
+
+            provider.AddLog(new CustomTraceLogModel
+            {
+                ClassName = args.Method.DeclaringType.FullName,
+                MethodName = args.Method.Name,
+                ReturnValue = args.ReturnValue,
+                StackTrace = args.Exception.StackTrace,
+                TraceStatus = TraceStatus.OnException
+            });
+
             args.FlowBehavior = FlowBehavior.Continue;
         }
     }
