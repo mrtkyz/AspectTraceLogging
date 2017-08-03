@@ -3,7 +3,7 @@ using Nest;
 using System;
 using System.Threading.Tasks;
 
-namespace AOPVSMSample.DataLayer
+namespace Common.DataLayer
 {
     [Serializable]
     public class ElasticSearchProvider

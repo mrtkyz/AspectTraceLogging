@@ -1,27 +1,25 @@
-﻿using System;
-using AOPVSMSample.Aspects;
+﻿using Data;
+using System;
 
-namespace AOPVSMSample
+namespace Business
 {
     public class Hesaplama
     {
-        [Log]
         public Hesaplama()
         {
             throw new Exception("hata fırladı...");
         }
-
-        [Log]
+        
         public double Bol(int x, int y)
         {
+            DataRepository data = new DataRepository();
+            int z = data.GetCarpan(DateTime.Now);
+
             return x / y;
         }
-
-
-        [Log]
+        
         public double Ekle(int x, int y)
         {
-
             throw new Exception("hata fırladı...");
             return x + y;
         }

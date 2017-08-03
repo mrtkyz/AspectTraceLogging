@@ -5,7 +5,7 @@ using AOPVSMSample.Dto;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AOPVSMSample.Aspects
+namespace Common.Aspects
 {
     [Serializable]
     public class LogAttribute : OnMethodBoundaryAspect

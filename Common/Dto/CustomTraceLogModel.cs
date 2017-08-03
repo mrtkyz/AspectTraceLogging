@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AOPVSMSample.Dto
+namespace Common.Dto
 {
     [Serializable]
     public class CustomTraceLogModel
