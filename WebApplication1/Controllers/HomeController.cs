@@ -1,6 +1,8 @@
 ﻿using Business;
+using Common.Aspects;
 using System.Web.Mvc;
 
+[assembly: Log]
 namespace WebApplication1.Controllers
 {
     public class HomeController : Controller
@@ -15,7 +17,7 @@ namespace WebApplication1.Controllers
 
             double toplam = calc.Ekle(1, 1);
 
-            return View();
+            return Content(string.Format("Bolum: {0}, Toplam: {1}", bolum, toplam));
         }
     }
 }

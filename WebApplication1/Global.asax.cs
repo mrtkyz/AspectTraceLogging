@@ -1,7 +1,7 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
+using Common.Aspects;
 
-[assembly:Log]
 namespace WebApplication1
 {
     public class MvcApplication : System.Web.HttpApplication

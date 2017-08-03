@@ -1,7 +1,6 @@
-﻿using AOPVSMSample.Dto;
+﻿using Common.Dto;
 using Nest;
 using System;
-using System.Threading.Tasks;
 
 namespace Common.DataLayer
 {
@@ -29,11 +28,9 @@ namespace Common.DataLayer
             return _instance;
         }
 
-        internal async Task AddLog(CustomTraceLogModel customTraceLogModel)
+        internal void AddLog(CustomTraceLogModel customTraceLogModel)
         {
-            var request = new IndexRequest<CustomTraceLogModel>("vdf-logging", "vdf-trace-logging", DateTime.Now.ToString("yyyyMMdd-hhmmffffff"));
-
-            await elasticClient.IndexAsync(customTraceLogModel);
+            var res =  elasticClient.Index(customTraceLogModel, i=>i.Index("").Type("vdf-trace-logging").Id(DateTime.Now.ToString("yyyyMMdd-hhmmffffff")));
         }
     }
 }

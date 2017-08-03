@@ -1,16 +1,15 @@
-﻿using System;
-using PostSharp.Aspects;
-using AOPVSMSample.DataLayer;
-using AOPVSMSample.Dto;
-using System.Collections.Generic;
+﻿using PostSharp.Aspects;
+using Common.DataLayer;
+using Common.Dto;
+using PostSharp.Serialization;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Common.Aspects
 {
-    [Serializable]
-    public class LogAttribute : OnMethodBoundaryAspect
+    [PSerializable]
+    public sealed class LogAttribute : OnMethodBoundaryAspect
     {
-        //((System.RuntimeType)((System.Reflection.RuntimeMethodInfo) args.Method).ReturnType).FullName
         public override void OnEntry(MethodExecutionArgs args)
         {
             ElasticSearchProvider provider = ElasticSearchProvider.GetInstance();
